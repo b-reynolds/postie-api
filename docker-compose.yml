@@ -7,5 +7,13 @@ services:
       - "5432:5432"
     volumes:
       - satchel_data:/var/lib/postgresql/data
+  postroom:
+    build:
+      context: ./postroom
+    depends_on:
+      - database
+    container_name: "postroom"
+    ports:
+      - "7000:7000"
 volumes:
   satchel_data:
