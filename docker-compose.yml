@@ -1,0 +1,11 @@
+version: "3"
+services:
+  database:
+    image: "postgres:12"
+    container_name: "satchel"
+    ports:
+      - "5432:5432"
+    volumes:
+      - satchel_data:/var/lib/postgresql/data
+volumes:
+  satchel_data:
