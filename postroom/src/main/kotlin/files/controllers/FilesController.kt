@@ -1,14 +1,18 @@
-package controllers.files
+package files.controllers
 
-import daos.SatchelFileDao
+import files.daos.SatchelFileDao
 import io.javalin.http.Context
 import io.javalin.http.NotFoundResponse
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.sql.Timestamp
 
 /**
  * Handles routes relating to the creation/management of files.
  */
-class FilesController(private val satchelFileDao: SatchelFileDao) {
+class FilesController : KoinComponent {
+    private val satchelFileDao : SatchelFileDao = get()
+
     /**
      * Responds to the request with a JSON object representing the file associated with the specified ID. If no such
      * file exists a HTTP status 404 response will be sent.

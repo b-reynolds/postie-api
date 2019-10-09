@@ -1,6 +1,6 @@
-package daos
+package files.daos
 
-import models.SatchelFile
+import files.models.SatchelFile
 import org.jdbi.v3.sqlobject.kotlin.RegisterKotlinMapper
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys
 import org.jdbi.v3.sqlobject.statement.SqlQuery
