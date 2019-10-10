@@ -4,7 +4,7 @@ import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.jdbi.v3.sqlobject.kotlin.KotlinSqlObjectPlugin
 
-private const val DB_HOST = "jdbc:postgresql://localhost"
+private const val DB_HOST = "jdbc:postgresql://satchel"
 private const val DB_PORT = 5432
 private const val DB_USER = "postgres"
 
