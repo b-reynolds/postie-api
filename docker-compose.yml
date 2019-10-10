@@ -16,5 +16,10 @@ services:
     container_name: "postroom"
     ports:
       - "7000:7000"
+    environment:
+      POSTMAN_PORT: 7000
+      SATCHEL_HOST: jdbc:postgresql://satchel
+      SATCHEL_PORT: 5432
+      SATCHEL_USER: postgres
 volumes:
   satchel_data:
