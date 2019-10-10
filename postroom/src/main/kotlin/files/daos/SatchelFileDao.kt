@@ -22,7 +22,7 @@ interface SatchelFileDao {
     /**
      * Returns the record associated with the specified [id] or `null` if one does not exist.
      */
-    @SqlQuery("select * from files where id = ?")
+    @SqlQuery("select * from files where id = ? and (expires_at is null or expires_at > now())")
     @RegisterKotlinMapper(SatchelFile::class)
     fun get(id: Int): SatchelFile?
 }

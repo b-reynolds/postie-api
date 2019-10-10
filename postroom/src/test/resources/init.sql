@@ -22,7 +22,6 @@ create table files
         constraint files_file_types_id_fk
             references file_types,
     contents text not null,
-    expired boolean default false not null,
     created_at timestamptz default now() not null,
     expires_at timestamptz
 );

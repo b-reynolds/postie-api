@@ -1,17 +1,20 @@
 package files.controllers
 
 import files.daos.SatchelFileDao
+import files.daos.SatchelFileTypeDao
 import io.javalin.http.Context
 import io.javalin.http.NotFoundResponse
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import java.sql.Timestamp
+import java.time.Instant
 
 /**
  * Handles routes relating to the creation/management of files.
  */
 class FilesController : KoinComponent {
     private val satchelFileDao : SatchelFileDao = get()
+    private val satchelFileTypeDao : SatchelFileTypeDao = get()
 
     /**
      * Responds to the request with a JSON object representing the file associated with the specified ID. If no such
@@ -44,9 +47,14 @@ class FilesController : KoinComponent {
      * will be sent.
      */
     fun create(context: Context) {
-        with(context.body<CreateDao>()) {
-            context.json(satchelFileDao.insert(name, fileTypeId, contents, expiresAt))
-        }
+        val dto = context.bodyValidator<CreateDao>()
+            .check({ dto -> dto.name.isNotBlank() })
+            .check({ dto -> dto.fileTypeId > 0 && satchelFileTypeDao.contains(dto.fileTypeId)})
+            .check({ dto -> dto.contents.isNotBlank() })
+            .check({ dto -> dto.expiresAt == null || dto.expiresAt.after(Timestamp.from(Instant.now()))})
+            .get()
+
+        context.json(satchelFileDao.insert(dto.name, dto.fileTypeId, dto.contents, dto.expiresAt))
     }
 
     /**
