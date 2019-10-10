@@ -9,6 +9,7 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import satchel.Satchel
 import utilities.ContentType
+import utilities.EnvHelper
 
 /**
  * Application entry-point.
@@ -31,7 +32,7 @@ private fun initializeDependencyInjection() {
 }
 
 private const val PATH_FILES = "files"
-private const val PORT = 7000
+private const val ENV_POSTMAN_PORT = "POSTMAN_PORT"
 
 private fun startApi() {
     Javalin
@@ -46,5 +47,5 @@ private fun startApi() {
                 }
             }
         }
-        .start(PORT)
+        .start(EnvHelper.getInt(ENV_POSTMAN_PORT))
 }
