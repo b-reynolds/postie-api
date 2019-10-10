@@ -1,6 +1,8 @@
 import files.controllers.FilesController
 import files.daos.JdbiSatchelFileDao
+import files.daos.JdbiSatchelFileTypeDao
 import files.daos.SatchelFileDao
+import files.daos.SatchelFileTypeDao
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
 import org.koin.core.context.startKoin
@@ -22,6 +24,7 @@ private fun initializeDependencyInjection() {
         modules(
             module {
                 single<SatchelFileDao> { JdbiSatchelFileDao(dataSource) }
+                single<SatchelFileTypeDao> { JdbiSatchelFileTypeDao(dataSource) }
             }
         )
     }
