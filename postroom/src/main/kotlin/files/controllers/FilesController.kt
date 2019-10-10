@@ -6,6 +6,7 @@ import io.javalin.http.NotFoundResponse
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import java.sql.Timestamp
+import java.time.Instant
 
 /**
  * Handles routes relating to the creation/management of files.
@@ -44,9 +45,14 @@ class FilesController : KoinComponent {
      * will be sent.
      */
     fun create(context: Context) {
-        with(context.body<CreateDao>()) {
-            context.json(satchelFileDao.insert(name, fileTypeId, contents, expiresAt))
-        }
+        val dto = context.bodyValidator<CreateDao>()
+            .check({ dto -> dto.name.isNotBlank() })
+            .check({ dto -> dto.fileTypeId > 0 })
+            .check({ dto -> dto.contents.isNotBlank() })
+            .check({ dto -> dto.expiresAt == null || dto.expiresAt.after(Timestamp.from(Instant.now()))})
+            .get()
+
+        context.json(satchelFileDao.insert(dto.name, dto.fileTypeId, dto.contents, dto.expiresAt))
     }
 
     /**
