@@ -12,10 +12,10 @@ import java.time.Instant
 /**
  * Handles routes relating to the creation/management of files.
  */
-class FilesController : KoinComponent {
-    private val satchelFileDao : SatchelFileDao = get()
-    private val satchelFileTypeDao : SatchelFileTypeDao = get()
-
+class FilesController(
+    private val satchelFileDao: SatchelFileDao,
+    private val satchelFileTypeDao: SatchelFileTypeDao
+) : KoinComponent {
     /**
      * Responds to the request with a JSON object representing the file associated with the specified ID. If no such
      * file exists a HTTP status 404 response will be sent.
