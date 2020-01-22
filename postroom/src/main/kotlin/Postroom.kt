@@ -5,7 +5,9 @@ import files.daos.SatchelFileDao
 import files.daos.SatchelFileTypeDao
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
+import org.koin.core.get
 import org.koin.dsl.module
 import satchel.Satchel
 import utilities.ContentType
@@ -16,7 +18,7 @@ import utilities.EnvHelper
  */
 fun main() {
     initializeDependencyInjection()
-    startApi()
+    Api.start()
 }
 
 private fun initializeDependencyInjection() {
@@ -34,18 +36,22 @@ private fun initializeDependencyInjection() {
 private const val PATH_FILES = "files"
 private const val ENV_POSTMAN_PORT = "POSTMAN_PORT"
 
-private fun startApi() {
-    Javalin
-        .create { config ->
-            config.defaultContentType = ContentType.Application.JSON
-        }
-        .routes {
-            path(PATH_FILES) {
-                post(FilesController()::create)
-                path(FilesController.Parameters.FILE_ID) {
-                    get(FilesController()::get)
+private object Api : KoinComponent {
+    fun start() {
+        val filesController = FilesController(get(), get())
+
+        Javalin
+            .create { config ->
+                config.defaultContentType = ContentType.Application.JSON
+            }
+            .routes {
+                path(PATH_FILES) {
+                    post(filesController::create)
+                    path(FilesController.Parameters.FILE_ID) {
+                        get(filesController::get)
+                    }
                 }
             }
-        }
-        .start(EnvHelper.getInt(ENV_POSTMAN_PORT))
+            .start(EnvHelper.getInt(ENV_POSTMAN_PORT))
+    }
 }
