@@ -13,7 +13,7 @@ import java.sql.Timestamp
  * @property expiresAt Date/time at which the file will expire (optional).
  */
 data class SatchelFile(
-    val id: Int,
+    val id: String,
     val name: String,
     val fileTypeId: Int,
     val contents: String,
