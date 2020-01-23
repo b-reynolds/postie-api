@@ -21,7 +21,7 @@ class FilesController(
      * file exists a HTTP status 404 response will be sent.
      */
     fun get(context: Context) {
-        val fileId = context.pathParam(Parameters.FILE_ID, Int::class.java).get()
+        val fileId = context.pathParam(Parameters.FILE_ID)
         val file = satchelFileDao.get(fileId) ?: throw NotFoundResponse()
 
         context.json(file)
