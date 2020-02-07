@@ -1,8 +1,10 @@
-import files.controllers.FilesController
-import files.daos.JdbiSatchelFileDao
-import files.daos.JdbiSatchelFileTypeDao
-import files.daos.SatchelFileDao
-import files.daos.SatchelFileTypeDao
+import api.v1.Path
+import api.v1.files.controllers.FilesGetController
+import api.v1.files.controllers.FilesPostController
+import api.v1.files.daos.implementations.jdbi.JdbiFileDao
+import api.v1.files.daos.implementations.jdbi.JdbiFileTypeDao
+import api.v1.files.daos.FileDao
+import api.v1.files.daos.FileTypeDao
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
 import org.koin.core.KoinComponent
@@ -26,30 +28,39 @@ private fun initializeDependencyInjection() {
     startKoin {
         modules(
             module {
-                single<SatchelFileDao> { JdbiSatchelFileDao(dataSource) }
-                single<SatchelFileTypeDao> { JdbiSatchelFileTypeDao(dataSource) }
+                single<FileDao> {
+                    JdbiFileDao(
+                        dataSource
+                    )
+                }
+                single<FileTypeDao> {
+                    JdbiFileTypeDao(
+                        dataSource
+                    )
+                }
             }
         )
     }
 }
 
-private const val PATH_FILES = "files"
 private const val ENV_POSTMAN_PORT = "POSTMAN_PORT"
 
 private object Api : KoinComponent {
     fun start() {
-        val filesController = FilesController(get(), get())
+        val filesGetController = FilesGetController(get())
+        val filesPostController = FilesPostController(get(), get())
 
         Javalin
             .create { config ->
                 config.defaultContentType = ContentType.Application.JSON
             }
             .routes {
-                path(PATH_FILES) {
-                    post(filesController::create)
-                    path(FilesController.Parameters.FILE_ID) {
-                        get(filesController::get)
+                path(Path.FILES) {
+                    path(FilesGetController.Parameter.FileId.name) {
+                        get(filesGetController::get)
                     }
+
+                    post(filesPostController::create)
                 }
             }
             .start(EnvHelper.getInt(ENV_POSTMAN_PORT))

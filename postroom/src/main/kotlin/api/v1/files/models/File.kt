@@ -1,4 +1,4 @@
-package files.models
+package api.v1.files.models
 
 import java.sql.Timestamp
 
@@ -12,7 +12,7 @@ import java.sql.Timestamp
  * @property createdAt Date/time at which the file was created.
  * @property expiresAt Date/time at which the file will expire (optional).
  */
-data class SatchelFile(
+data class File(
     val id: String,
     val name: String,
     val fileTypeId: Int,
