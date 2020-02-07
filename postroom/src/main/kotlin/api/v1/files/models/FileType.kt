@@ -1,4 +1,4 @@
-package files.models
+package api.v1.files.models
 
 import java.sql.Timestamp
 
@@ -9,7 +9,7 @@ import java.sql.Timestamp
  * @property name Name of the file type.
  * @property createdAt Date/time at which the file type was created.
  */
-data class SatchelFileType(
+data class FileType(
     val id: Int,
     val name: String,
     val createdAt: Timestamp
