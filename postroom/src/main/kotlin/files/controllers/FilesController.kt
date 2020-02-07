@@ -2,10 +2,11 @@ package files.controllers
 
 import files.daos.SatchelFileDao
 import files.daos.SatchelFileTypeDao
+import io.javalin.core.util.Header
 import io.javalin.http.Context
 import io.javalin.http.NotFoundResponse
 import org.koin.core.KoinComponent
-import org.koin.core.get
+import java.net.HttpURLConnection
 import java.sql.Timestamp
 import java.time.Instant
 
@@ -43,18 +44,25 @@ class FilesController(
     )
 
     /**
-     * Creates a new file and responds with a JSON object representing it. If the request is malformed a HTTP status 400
-     * will be sent.
+     * Creates a new file.
+     *
+     * Upon success, responds with a 201 created status code and includes a location header leading to the newly
+     * created resource.
      */
     fun create(context: Context) {
         val dto = context.bodyValidator<CreateDao>()
             .check({ dto -> dto.name.isNotBlank() })
-            .check({ dto -> dto.fileTypeId > 0 && satchelFileTypeDao.contains(dto.fileTypeId)})
+            .check({ dto -> dto.fileTypeId > 0 && satchelFileTypeDao.contains(dto.fileTypeId) })
             .check({ dto -> dto.contents.isNotBlank() })
-            .check({ dto -> dto.expiresAt == null || dto.expiresAt.after(Timestamp.from(Instant.now()))})
+            .check({ dto -> dto.expiresAt == null || dto.expiresAt.after(Timestamp.from(Instant.now())) })
             .get()
 
-        context.json(satchelFileDao.insert(dto.name, dto.fileTypeId, dto.contents, dto.expiresAt))
+        val file = satchelFileDao.insert(dto.name, dto.fileTypeId, dto.contents, dto.expiresAt)
+
+        with(context) {
+            header(Header.LOCATION, "${context.host()}${context.path()}${file.id}")
+            status(HttpURLConnection.HTTP_CREATED)
+        }
     }
 
     /**
