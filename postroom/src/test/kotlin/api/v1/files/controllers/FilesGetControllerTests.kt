@@ -1,6 +1,7 @@
 package api.v1.files.controllers
 
 import api.v1.exceptions.FileNotFoundException
+import api.v1.exceptions.InvalidFileIdException
 import api.v1.files.daos.FileDao
 import io.javalin.http.Context
 import io.mockk.every
@@ -15,12 +16,12 @@ import java.net.HttpURLConnection
 class FilesGetControllerTests {
     private val context = mockk<Context>(relaxed = true)
     private val dao = mockk<FileDao>(relaxed = true)
-    private val fileId = "01bba99c-19fc-4b78-8a85-74ef9237a120"
+    private val validFileId = "01bba99c-19fc-4b78-8a85-74ef9237a120"
 
     @Test
     fun `FileNotFoundException is thrown if a requested file does not exist`() {
-        every { context.pathParam(FilesGetController.Parameter.FileId.name) } returns fileId
-        every { dao.get(fileId) } returns null
+        every { context.pathParam(FilesGetController.Parameter.FileId.name) } returns validFileId
+        every { dao.get(validFileId) } returns null
 
         Assertions.assertThrows(FileNotFoundException::class.java) {
             FilesGetController(dao)
@@ -29,9 +30,21 @@ class FilesGetControllerTests {
     }
 
     @Test
+    fun `InvalidFileIdException is thrown if requested file ID is not a valid UUID`() {
+        val invalidFileId = "01bba99c"
+
+        every { context.pathParam(FilesGetController.Parameter.FileId.name) } returns invalidFileId
+
+        Assertions.assertThrows(InvalidFileIdException::class.java) {
+            FilesGetController(dao)
+                .get(context)
+        }
+    }
+
+    @Test
     fun `HTTP status code 200 is returned if a requested file exists`() {
-        every { context.pathParam(FilesGetController.Parameter.FileId.name) } returns fileId
-        every { dao.get(fileId) } returns mockk(relaxed = true)
+        every { context.pathParam(FilesGetController.Parameter.FileId.name) } returns validFileId
+        every { dao.get(validFileId) } returns mockk(relaxed = true)
 
         FilesGetController(dao)
             .get(context)
