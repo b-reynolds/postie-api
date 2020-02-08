@@ -1,4 +1,6 @@
 import api.v1.Path
+import api.v1.exceptions.ApiException
+import api.v1.exceptions.InternalServerException
 import api.v1.files.controllers.FilesGetController
 import api.v1.files.controllers.FilesPostController
 import api.v1.files.daos.implementations.jdbi.JdbiFileDao
@@ -71,6 +73,16 @@ private object Api : KoinComponent {
 
                     post(filesPostController::create)
                 }
+            }
+            .exception(ApiException::class.java) { exception, context ->
+                context.status(exception.status)
+                context.json(exception)
+            }
+            .exception(Exception::class.java) { _, context ->
+                val exception = InternalServerException()
+
+                context.status(exception.status)
+                context.json(exception)
             }
             .start(EnvHelper.getInt(ENV_POSTMAN_PORT))
     }
