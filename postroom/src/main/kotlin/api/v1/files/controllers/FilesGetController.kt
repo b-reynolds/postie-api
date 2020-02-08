@@ -4,6 +4,7 @@ import api.v1.exceptions.FileNotFoundException
 import api.v1.exceptions.InvalidFileIdException
 import api.v1.files.daos.FileDao
 import io.javalin.http.Context
+import java.net.HttpURLConnection
 
 /**
  * Files GET request controller.
@@ -23,7 +24,10 @@ class FilesGetController(private val fileDao: FileDao) {
 
         val file = fileDao.get(fileId) ?: throw FileNotFoundException(fileId)
 
-        context.json(file)
+        with(context) {
+            status(HttpURLConnection.HTTP_OK)
+            json(file)
+        }
     }
 
     /**
