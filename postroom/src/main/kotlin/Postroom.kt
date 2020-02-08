@@ -7,6 +7,7 @@ import api.v1.files.daos.implementations.jdbi.JdbiFileDao
 import api.v1.files.daos.implementations.jdbi.JdbiFileTypeDao
 import api.v1.files.daos.FileDao
 import api.v1.files.daos.FileTypeDao
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.Javalin
@@ -33,15 +34,11 @@ private fun initializeDependencyInjection() {
     startKoin {
         modules(
             module {
-                single<FileDao> {
-                    JdbiFileDao(
-                        dataSource
-                    )
-                }
-                single<FileTypeDao> {
-                    JdbiFileTypeDao(
-                        dataSource
-                    )
+                single<FileDao> { JdbiFileDao(dataSource) }
+                single<FileTypeDao> { JdbiFileTypeDao(dataSource) }
+                single<ObjectMapper> {
+                    jacksonObjectMapper()
+                        .enable(SerializationFeature.INDENT_OUTPUT)
                 }
             }
         )
@@ -53,14 +50,9 @@ private const val ENV_POSTMAN_PORT = "POSTMAN_PORT"
 private object Api : KoinComponent {
     fun start() {
         val filesGetController = FilesGetController(get())
-        val filesPostController = FilesPostController(get(), get())
+        val filesPostController = FilesPostController(get(), get(), get())
 
-        JavalinJackson
-            .configure(
-                jacksonObjectMapper()
-                    .enable(SerializationFeature.INDENT_OUTPUT)
-            )
-
+        JavalinJackson.configure(get())
         Javalin
             .create { config ->
                 config.defaultContentType = ContentType.Application.JSON

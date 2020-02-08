@@ -1,7 +1,13 @@
 package api.v1.files.controllers
 
+import api.v1.files.controllers.dtos.CreateFileDto
+import api.v1.files.controllers.dtos.CreateDtoDeserializer
 import api.v1.files.daos.FileDao
 import api.v1.files.daos.FileTypeDao
+import api.v1.utils.validateField
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.javalin.core.util.Header
 import io.javalin.http.Context
 import java.net.HttpURLConnection
@@ -15,8 +21,14 @@ import java.time.Instant
  */
 class FilesPostController(
     private val fileDao: FileDao,
-    private val fileTypeDao: FileTypeDao
+    private val fileTypeDao: FileTypeDao,
+    objectMapper: ObjectMapper
 ) {
+    private val objectMapper = objectMapper.registerModule(
+        SimpleModule()
+            .addDeserializer(CreateFileDto::class.java, CreateDtoDeserializer())
+    )
+
     /**
      * Creates a new file.
      *
@@ -24,12 +36,9 @@ class FilesPostController(
      * created resource.
      */
     fun create(context: Context) {
-        val dto = context.bodyValidator<CreateDao>()
-            .check({ dto -> dto.name.isNotBlank() })
-            .check({ dto -> dto.fileTypeId > 0 && fileTypeDao.contains(dto.fileTypeId) })
-            .check({ dto -> dto.contents.isNotBlank() })
-            .check({ dto -> dto.expiresAt == null || dto.expiresAt.after(Timestamp.from(Instant.now())) })
-            .get()
+        val dto = objectMapper
+            .readValue<CreateFileDto>(context.body())
+            .validate()
 
         val file = fileDao.insert(dto.name, dto.fileTypeId, dto.contents, dto.expiresAt)
 
@@ -39,10 +48,23 @@ class FilesPostController(
         }
     }
 
-    private data class CreateDao(
-        val name: String,
-        val fileTypeId: Int,
-        val contents: String,
-        val expiresAt: Timestamp?
-    )
+    private fun CreateFileDto.validate(): CreateFileDto {
+        validateField(CreateFileDto.Fields.NAME, "Cannot be blank") { dto ->
+            dto.name.isNotBlank()
+        }
+
+        validateField(CreateFileDto.Fields.FILE_TYPE_ID, "Must exist") { dto ->
+            dto.fileTypeId > 0 && fileTypeDao.contains(dto.fileTypeId)
+        }
+
+        validateField(CreateFileDto.Fields.CONTENTS, "Cannot be blank") { dto ->
+            dto.contents.isNotBlank()
+        }
+
+        validateField(CreateFileDto.Fields.EXPIRES_AT, "Cannot be in the past") { dto ->
+            dto.expiresAt == null || dto.expiresAt.after(Timestamp.from(Instant.now()))
+        }
+
+        return this
+    }
 }
