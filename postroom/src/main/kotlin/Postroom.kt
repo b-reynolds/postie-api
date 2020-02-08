@@ -66,12 +66,14 @@ private object Api : KoinComponent {
                 config.defaultContentType = ContentType.Application.JSON
             }
             .routes {
-                path(Path.FILES) {
-                    path(FilesGetController.Parameter.FileId.name) {
-                        get(filesGetController::get)
-                    }
+                path(Path.VERSION) {
+                    path(Path.FILES) {
+                        path(FilesGetController.Parameter.FileId.name) {
+                            get(filesGetController::get)
+                        }
 
-                    post(filesPostController::create)
+                        post(filesPostController::create)
+                    }
                 }
             }
             .exception(ApiException::class.java) { exception, context ->
