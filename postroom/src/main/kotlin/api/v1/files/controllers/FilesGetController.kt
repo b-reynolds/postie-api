@@ -1,8 +1,9 @@
 package api.v1.files.controllers
 
+import api.v1.exceptions.FileNotFoundException
+import api.v1.exceptions.InvalidFileIdException
 import api.v1.files.daos.FileDao
 import io.javalin.http.Context
-import io.javalin.http.NotFoundResponse
 
 /**
  * Files GET request controller.
@@ -16,7 +17,11 @@ class FilesGetController(private val fileDao: FileDao) {
      */
     fun get(context: Context) {
         val fileId = context.pathParam(Parameter.FileId.name)
-        val file = fileDao.get(fileId) ?: throw NotFoundResponse()
+        if (!isValidId(fileId)) {
+            throw InvalidFileIdException(fileId)
+        }
+
+        val file = fileDao.get(fileId) ?: throw FileNotFoundException(fileId)
 
         context.json(file)
     }
@@ -31,3 +36,7 @@ class FilesGetController(private val fileDao: FileDao) {
         object FileId : Parameter(":file-id")
     }
 }
+
+private val uuidRegex = Regex("""\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b""")
+
+private fun isValidId(id: String) = id matches uuidRegex
