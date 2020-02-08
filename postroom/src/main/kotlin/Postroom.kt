@@ -5,8 +5,11 @@ import api.v1.files.daos.implementations.jdbi.JdbiFileDao
 import api.v1.files.daos.implementations.jdbi.JdbiFileTypeDao
 import api.v1.files.daos.FileDao
 import api.v1.files.daos.FileTypeDao
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.plugin.json.JavalinJackson
 import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
 import org.koin.core.get
@@ -49,6 +52,12 @@ private object Api : KoinComponent {
     fun start() {
         val filesGetController = FilesGetController(get())
         val filesPostController = FilesPostController(get(), get())
+
+        JavalinJackson
+            .configure(
+                jacksonObjectMapper()
+                    .enable(SerializationFeature.INDENT_OUTPUT)
+            )
 
         Javalin
             .create { config ->
