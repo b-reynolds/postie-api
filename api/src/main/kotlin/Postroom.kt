@@ -6,6 +6,7 @@ import api.v1.files.controllers.FilesPostController
 import api.v1.files.daos.implementations.jdbi.JdbiFilesDao
 import api.v1.filetypes.daos.implementations.jdbi.JdbiFileTypesDao
 import api.v1.files.daos.FilesDao
+import api.v1.filetypes.controllers.FileTypesGetController
 import api.v1.filetypes.daos.FileTypesDao
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -55,6 +56,7 @@ private object Api : KoinComponent {
     fun start() {
         val filesGetController = FilesGetController(get())
         val filesPostController = FilesPostController(get(), get(), get())
+        val fileTypesGetController = FileTypesGetController(get())
 
         JavalinJackson.configure(get())
         Javalin
@@ -69,6 +71,9 @@ private object Api : KoinComponent {
                         }
 
                         post(filesPostController::create)
+                    }
+                    path(Path.FILE_TYPES) {
+                        get(fileTypesGetController::get)
                     }
                 }
             }
