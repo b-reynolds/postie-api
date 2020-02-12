@@ -1,6 +1,6 @@
-package api.v1.files.daos.implementations.jdbi
+package api.v1.filetypes.daos.implementations.jdbi
 
-import api.v1.files.daos.FileTypeDao
+import api.v1.filetypes.daos.FileTypeDao
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.sqlobject.kotlin.onDemand
 

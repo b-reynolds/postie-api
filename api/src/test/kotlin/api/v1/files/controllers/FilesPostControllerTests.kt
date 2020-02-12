@@ -4,7 +4,7 @@ import api.v1.exceptions.InvalidFieldException
 import api.v1.exceptions.MissingFieldException
 import api.v1.files.controllers.dtos.CreateFileDto
 import api.v1.files.daos.FileDao
-import api.v1.files.daos.FileTypeDao
+import api.v1.filetypes.daos.FileTypeDao
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.http.Context
 import io.mockk.every

@@ -1,4 +1,4 @@
-package api.v1.files.daos
+package api.v1.filetypes.daos
 
 import org.jdbi.v3.sqlobject.statement.SqlQuery
 

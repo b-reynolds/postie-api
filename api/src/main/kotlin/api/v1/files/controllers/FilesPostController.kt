@@ -3,7 +3,7 @@ package api.v1.files.controllers
 import api.v1.files.controllers.dtos.CreateFileDto
 import api.v1.files.controllers.dtos.CreateDtoDeserializer
 import api.v1.files.daos.FileDao
-import api.v1.files.daos.FileTypeDao
+import api.v1.filetypes.daos.FileTypeDao
 import api.v1.utils.validateField
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule

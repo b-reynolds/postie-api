@@ -4,9 +4,9 @@ import api.v1.exceptions.InternalServerException
 import api.v1.files.controllers.FilesGetController
 import api.v1.files.controllers.FilesPostController
 import api.v1.files.daos.implementations.jdbi.JdbiFileDao
-import api.v1.files.daos.implementations.jdbi.JdbiFileTypeDao
+import api.v1.filetypes.daos.implementations.jdbi.JdbiFileTypeDao
 import api.v1.files.daos.FileDao
-import api.v1.files.daos.FileTypeDao
+import api.v1.filetypes.daos.FileTypeDao
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -35,7 +35,11 @@ private fun initializeDependencyInjection() {
         modules(
             module {
                 single<FileDao> { JdbiFileDao(dataSource) }
-                single<FileTypeDao> { JdbiFileTypeDao(dataSource) }
+                single<FileTypeDao> {
+                    JdbiFileTypeDao(
+                        dataSource
+                    )
+                }
                 single<ObjectMapper> {
                     jacksonObjectMapper()
                         .enable(SerializationFeature.INDENT_OUTPUT)
