@@ -44,4 +44,11 @@ interface FileTypesDao {
     @SqlQuery("select * from file_types where id = ?")
     @RegisterKotlinMapper(File::class)
     fun get(id: Int): FileType?
+
+    /**
+     * Returns the file type associated with the specified [name] or `null` if one does not exist.
+     */
+    @SqlQuery("select * from file_types where name = ?")
+    @RegisterKotlinMapper(File::class)
+    fun get(name: String): FileType?
 }
