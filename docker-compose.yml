@@ -2,24 +2,24 @@ version: "3"
 services:
   database:
     image: "postgres:12"
-    container_name: "satchel"
+    container_name: "database"
     ports:
       - "5432:5432"
     volumes:
-      - ./satchel_data:/var/lib/postgresql/data
-      - ./satchel/init.sql:/docker-entrypoint-initdb.d/init.sql
-  postroom:
+      - ./database/data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+  api:
     build:
-      context: ./postroom
+      context: ./api
     depends_on:
       - database
-    container_name: "postroom"
+    container_name: "api"
     ports:
       - "7000:7000"
     environment:
-      POSTMAN_PORT: 7000
-      SATCHEL_HOST: jdbc:postgresql://satchel
-      SATCHEL_PORT: 5432
-      SATCHEL_USER: postgres
+      API_PORT: 7000
+      DATABASE_HOST: jdbc:postgresql://database
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
 volumes:
-  satchel_data:
+  database_data:

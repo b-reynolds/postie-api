@@ -10,6 +10,7 @@ import api.v1.files.daos.FileTypeDao
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import database.Database
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
 import io.javalin.plugin.json.JavalinJackson
@@ -17,7 +18,6 @@ import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
 import org.koin.core.get
 import org.koin.dsl.module
-import satchel.Satchel
 import utilities.ContentType
 import utilities.EnvHelper
 
@@ -30,7 +30,7 @@ fun main() {
 }
 
 private fun initializeDependencyInjection() {
-    val dataSource = Satchel.connect()
+    val dataSource = Database.connect()
     startKoin {
         modules(
             module {
@@ -45,7 +45,7 @@ private fun initializeDependencyInjection() {
     }
 }
 
-private const val ENV_POSTMAN_PORT = "POSTMAN_PORT"
+private const val ENV_API_PORT = "API_PORT"
 
 private object Api : KoinComponent {
     fun start() {
@@ -78,6 +78,6 @@ private object Api : KoinComponent {
                 context.status(exception.status)
                 context.json(exception)
             }
-            .start(EnvHelper.getInt(ENV_POSTMAN_PORT))
+            .start(EnvHelper.getInt(ENV_API_PORT))
     }
 }
