@@ -3,8 +3,8 @@ package api.v1.files.controllers
 import api.v1.exceptions.InvalidFieldException
 import api.v1.exceptions.MissingFieldException
 import api.v1.files.controllers.dtos.CreateFileDto
-import api.v1.files.daos.FileDao
-import api.v1.filetypes.daos.FileTypeDao
+import api.v1.files.daos.FilesDao
+import api.v1.filetypes.daos.FileTypesDao
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.http.Context
 import io.mockk.every
@@ -20,8 +20,8 @@ class FilesPostControllerTests {
     private val objectMapper = jacksonObjectMapper()
     private val context = mockk<Context>(relaxed = true)
 
-    private val fileDao = mockk<FileDao>(relaxed = true)
-    private val fileTypeDao = mockk<FileTypeDao>(relaxed = true)
+    private val fileDao = mockk<FilesDao>(relaxed = true)
+    private val fileTypeDao = mockk<FileTypesDao>(relaxed = true)
 
     private val fileTypeId = 1
 

@@ -5,7 +5,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery
 /**
  * Provides access to the `file_types` table.
  */
-interface FileTypeDao {
+interface FileTypesDao {
     /**
      * Returns `true` if a record exists within the specified [id].
      */

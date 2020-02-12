@@ -10,7 +10,7 @@ import java.sql.Timestamp
 /**
  * Provides access to the `files` table.
  */
-interface FileDao {
+interface FilesDao {
     /**
      * Inserts a new record within the `files` table.
      */
