@@ -2,7 +2,7 @@ package api.v1.files.controllers
 
 import api.v1.exceptions.FileNotFoundException
 import api.v1.exceptions.InvalidFileIdException
-import api.v1.files.daos.FileDao
+import api.v1.files.daos.FilesDao
 import io.javalin.http.Context
 import java.net.HttpURLConnection
 
@@ -11,7 +11,7 @@ import java.net.HttpURLConnection
  *
  * Handles the retrieval of files.
  */
-class FilesGetController(private val fileDao: FileDao) {
+class FilesGetController(private val filesDao: FilesDao) {
     /**
      * Responds to the request with a JSON object representing the file associated with the specified ID. If no such
      * file exists a HTTP status 404 response will be sent.
@@ -22,7 +22,7 @@ class FilesGetController(private val fileDao: FileDao) {
             throw InvalidFileIdException(fileId)
         }
 
-        val file = fileDao.get(fileId) ?: throw FileNotFoundException(fileId)
+        val file = filesDao.get(fileId) ?: throw FileNotFoundException(fileId)
 
         with(context) {
             status(HttpURLConnection.HTTP_OK)

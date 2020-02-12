@@ -3,10 +3,13 @@ import api.v1.exceptions.ApiException
 import api.v1.exceptions.InternalServerException
 import api.v1.files.controllers.FilesGetController
 import api.v1.files.controllers.FilesPostController
-import api.v1.files.daos.implementations.jdbi.JdbiFileDao
-import api.v1.files.daos.implementations.jdbi.JdbiFileTypeDao
-import api.v1.files.daos.FileDao
-import api.v1.files.daos.FileTypeDao
+import api.v1.files.daos.implementations.jdbi.JdbiFilesDao
+import api.v1.filetypes.daos.implementations.jdbi.JdbiFileTypesDao
+import api.v1.files.daos.FilesDao
+import api.v1.filetypes.controllers.FileTypeGetController
+import api.v1.filetypes.controllers.FileTypesGetController
+import api.v1.filetypes.controllers.FileTypesPostController
+import api.v1.filetypes.daos.FileTypesDao
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -34,8 +37,12 @@ private fun initializeDependencyInjection() {
     startKoin {
         modules(
             module {
-                single<FileDao> { JdbiFileDao(dataSource) }
-                single<FileTypeDao> { JdbiFileTypeDao(dataSource) }
+                single<FilesDao> { JdbiFilesDao(dataSource) }
+                single<FileTypesDao> {
+                    JdbiFileTypesDao(
+                        dataSource
+                    )
+                }
                 single<ObjectMapper> {
                     jacksonObjectMapper()
                         .enable(SerializationFeature.INDENT_OUTPUT)
@@ -51,6 +58,9 @@ private object Api : KoinComponent {
     fun start() {
         val filesGetController = FilesGetController(get())
         val filesPostController = FilesPostController(get(), get(), get())
+        val fileTypesGetController = FileTypesGetController(get())
+        val fileTypeGetController = FileTypeGetController(get())
+        val fileTypesPostController = FileTypesPostController(get(), get())
 
         JavalinJackson.configure(get())
         Javalin
@@ -65,6 +75,13 @@ private object Api : KoinComponent {
                         }
 
                         post(filesPostController::create)
+                    }
+                    path(Path.FILE_TYPES) {
+                        get(fileTypesGetController::get)
+                        post(fileTypesPostController::create)
+                        path(FileTypeGetController.Parameter.FileTypeId.name) {
+                            get(fileTypeGetController::get)
+                        }
                     }
                 }
             }

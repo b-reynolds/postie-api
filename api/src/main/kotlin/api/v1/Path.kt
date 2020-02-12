@@ -13,4 +13,9 @@ object Path {
      * Files path.
      */
     const val FILES = "files"
+
+    /**
+     * File types path.
+     */
+    const val FILE_TYPES = "filetypes"
 }

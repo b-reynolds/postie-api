@@ -2,8 +2,8 @@ package api.v1.files.controllers
 
 import api.v1.files.controllers.dtos.CreateFileDto
 import api.v1.files.controllers.dtos.CreateDtoDeserializer
-import api.v1.files.daos.FileDao
-import api.v1.files.daos.FileTypeDao
+import api.v1.files.daos.FilesDao
+import api.v1.filetypes.daos.FileTypesDao
 import api.v1.utils.validateField
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
@@ -20,8 +20,8 @@ import java.time.Instant
  * Handles the creation of new files.
  */
 class FilesPostController(
-    private val fileDao: FileDao,
-    private val fileTypeDao: FileTypeDao,
+    private val filesDao: FilesDao,
+    private val fileTypesDao: FileTypesDao,
     objectMapper: ObjectMapper
 ) {
     private val objectMapper = objectMapper.registerModule(
@@ -40,7 +40,7 @@ class FilesPostController(
             .readValue<CreateFileDto>(context.body())
             .validate()
 
-        val file = fileDao.insert(dto.name, dto.fileTypeId, dto.contents, dto.expiresAt)
+        val file = filesDao.insert(dto.name, dto.fileTypeId, dto.contents, dto.expiresAt)
 
         with(context) {
             header(Header.LOCATION, "${context.host()}${context.path()}${file.id}")
@@ -54,7 +54,7 @@ class FilesPostController(
         }
 
         validateField(CreateFileDto.Fields.FILE_TYPE_ID, "Must exist") { dto ->
-            dto.fileTypeId > 0 && fileTypeDao.contains(dto.fileTypeId)
+            dto.fileTypeId > 0 && fileTypesDao.contains(dto.fileTypeId)
         }
 
         validateField(CreateFileDto.Fields.CONTENTS, "Cannot be blank") { dto ->

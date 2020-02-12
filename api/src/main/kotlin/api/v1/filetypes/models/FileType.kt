@@ -1,4 +1,4 @@
-package api.v1.files.models
+package api.v1.filetypes.models
 
 import java.sql.Timestamp
 

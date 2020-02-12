@@ -2,7 +2,7 @@ package api.v1.files.controllers
 
 import api.v1.exceptions.FileNotFoundException
 import api.v1.exceptions.InvalidFileIdException
-import api.v1.files.daos.FileDao
+import api.v1.files.daos.FilesDao
 import io.javalin.http.Context
 import io.mockk.every
 import io.mockk.mockk
@@ -15,7 +15,7 @@ import java.net.HttpURLConnection
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class FilesGetControllerTests {
     private val context = mockk<Context>(relaxed = true)
-    private val dao = mockk<FileDao>(relaxed = true)
+    private val dao = mockk<FilesDao>(relaxed = true)
     private val validFileId = "01bba99c-19fc-4b78-8a85-74ef9237a120"
 
     @Test
