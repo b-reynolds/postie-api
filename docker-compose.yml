@@ -8,12 +8,12 @@ services:
     volumes:
       - ./satchel_data:/var/lib/postgresql/data
       - ./satchel/init.sql:/docker-entrypoint-initdb.d/init.sql
-  postroom:
+  api:
     build:
-      context: ./postroom
+      context: ./api
     depends_on:
       - database
-    container_name: "postroom"
+    container_name: "api"
     ports:
       - "7000:7000"
     environment:
