@@ -60,7 +60,7 @@ test {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'PostroomKt'
+                'Main-Class': 'PostieKt'
         )
     }
 }

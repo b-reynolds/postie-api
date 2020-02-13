@@ -17,9 +17,9 @@ services:
     ports:
       - "7000:7000"
     environment:
-      API_PORT: 7000
-      DATABASE_HOST: jdbc:postgresql://database
-      DATABASE_PORT: 5432
-      DATABASE_USER: postgres
+      POSTIE_PORT: 7000
+      POSTIE_POSTGRES_HOST: jdbc:postgresql://database
+      POSTIE_POSTGRES_PORT: 5432
+      POSTIE_POSTGRES_USER: postgres
 volumes:
   database_data:
