@@ -24,6 +24,9 @@ dependencies {
     // API
     implementation "io.javalin:javalin:3.5.0"
 
+    // CLI
+    implementation "com.github.ajalt:clikt:2.4.0"
+
     // Database
     implementation "org.postgresql:postgresql:42.2.8"
     implementation "org.jdbi:jdbi3-core:3.10.1"
