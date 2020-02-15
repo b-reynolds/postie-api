@@ -15,26 +15,34 @@ repositories {
 }
 
 dependencies {
+    // General
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "io.javalin:javalin:3.5.0"
+
+    // Logging
     implementation "org.slf4j:slf4j-simple:1.7.26"
 
+    // API
+    implementation "io.javalin:javalin:3.5.0"
+
+    // CLI
+    implementation "com.github.ajalt:clikt:2.4.0"
+
+    // Database
+    implementation "org.postgresql:postgresql:42.2.8"
     implementation "org.jdbi:jdbi3-core:3.10.1"
     implementation "org.jdbi:jdbi3-kotlin-sqlobject:3.10.1"
     implementation "org.jdbi:jdbi3-kotlin:3.10.1"
 
-    implementation "org.postgresql:postgresql:42.2.8"
-
+    // JSON Serialization
     implementation "com.fasterxml.jackson.core:jackson-databind:2.10.0.pr1"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.10.0.pr1"
 
+    // Dependency Injection
     implementation "org.koin:koin-core:2.0.1"
 
-    testImplementation "org.testcontainers:junit-jupiter:1.12.2"
-    testImplementation "org.testcontainers:postgresql:1.12.2"
+    // Unit Testing
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
-    testImplementation "org.postgresql:postgresql:42.2.8"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.5.2"
     testImplementation "io.mockk:mockk:1.9.3"
 }
 
@@ -52,7 +60,7 @@ test {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'PostroomKt'
+                'Main-Class': 'PostieKt'
         )
     }
 }
