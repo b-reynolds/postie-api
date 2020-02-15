@@ -4,6 +4,7 @@ import api.helpers.ContentType
 import api.v1.Path
 import api.v1.exceptions.ApiException
 import api.v1.exceptions.InternalServerException
+import api.v1.routes.auth.controllers.AuthenticationController
 import api.v1.routes.files.controllers.FilesGetController
 import api.v1.routes.files.controllers.FilesPostController
 import api.v1.routes.filetypes.controllers.FileTypeGetController
@@ -15,8 +16,10 @@ import io.javalin.plugin.json.JavalinJackson
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
-class Api(private val port: Int) : KoinComponent {
+class Api(private val port: Int, private val apiKey: String) : KoinComponent {
     fun start() {
+        val authenticationController = AuthenticationController(apiKey)
+
         val filesGetController = FilesGetController(get())
         val filesPostController = FilesPostController(get(), get(), get())
         val fileTypeGetController = FileTypeGetController(get())
@@ -31,6 +34,8 @@ class Api(private val port: Int) : KoinComponent {
             .routes {
                 path(Path.VERSION) {
                     path(Path.FILES) {
+                        before(authenticationController::verify)
+
                         path(FilesGetController.Parameter.FileId.name) {
                             get(filesGetController::get)
                         }
@@ -38,6 +43,8 @@ class Api(private val port: Int) : KoinComponent {
                         post(filesPostController::create)
                     }
                     path(Path.FILE_TYPES) {
+                        before(authenticationController::verify)
+
                         get(fileTypesGetController::get)
                         post(fileTypesPostController::create)
                         path(FileTypeGetController.Parameter.FileTypeId.name) {

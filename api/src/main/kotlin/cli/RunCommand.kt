@@ -10,6 +10,7 @@ import database.PostgresCredentials
 import cli.helpers.EnvHelper
 
 private const val ENV_PORT = "POSTIE_PORT"
+private const val ENV_POSTIE_API_KEY = "POSTIE_API_KEY"
 
 private const val ENV_POSTGRES_HOST = "POSTIE_POSTGRES_HOST"
 private const val ENV_POSTGRES_PORT = "POSTIE_POSTGRES_PORT"
@@ -25,6 +26,13 @@ class RunCommand : CliktCommand(
     )
         .int()
         .defaultLazy { EnvHelper.requireInt(ENV_PORT) }
+
+    private val apiKey by option(
+        names = *arrayOf("--api-key"),
+        help = "Postie API key that will be used to to authenticate requests (defaults to environment variable " +
+                "${ENV_POSTIE_API_KEY})."
+    )
+        .defaultLazy { EnvHelper.require(ENV_POSTIE_API_KEY) }
 
     private val postgresHost by option(
         names = *arrayOf("--postgres-host"),
@@ -48,7 +56,7 @@ class RunCommand : CliktCommand(
     override fun run() {
         initializeDependencies(PostgresCredentials(postgresHost, postgresPort, postgresUser))
 
-        Api(port)
+        Api(port, apiKey)
             .start()
     }
 }

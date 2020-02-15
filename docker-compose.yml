@@ -18,6 +18,7 @@ services:
       - "7000:7000"
     environment:
       POSTIE_PORT: 7000
+      POSTIE_API_KEY: postie
       POSTIE_POSTGRES_HOST: jdbc:postgresql://database
       POSTIE_POSTGRES_PORT: 5432
       POSTIE_POSTGRES_USER: postgres
