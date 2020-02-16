@@ -15,6 +15,7 @@ private const val ENV_POSTIE_API_KEY = "POSTIE_API_KEY"
 private const val ENV_POSTGRES_HOST = "POSTIE_POSTGRES_HOST"
 private const val ENV_POSTGRES_PORT = "POSTIE_POSTGRES_PORT"
 private const val ENV_POSTGRES_USER = "POSTIE_POSTGRES_USER"
+private const val ENV_POSTGRES_PASSWORD = "POSTIE_POSTGRES_PASSWORD"
 
 class RunCommand : CliktCommand(
     name = "run",
@@ -53,8 +54,15 @@ class RunCommand : CliktCommand(
     )
         .defaultLazy { EnvHelper.require(ENV_POSTGRES_USER) }
 
+    private val postgresPassword by option(
+        names = *arrayOf("--postgres-password"),
+        help = "Postie database password (defaults to environment variable ${ENV_POSTGRES_PASSWORD})."
+    )
+        .defaultLazy { EnvHelper.require(ENV_POSTGRES_PASSWORD) }
+
+
     override fun run() {
-        initializeDependencies(PostgresCredentials(postgresHost, postgresPort, postgresUser))
+        initializeDependencies(PostgresCredentials(postgresHost, postgresPort, postgresUser, postgresPassword))
 
         Api(port, apiKey)
             .start()

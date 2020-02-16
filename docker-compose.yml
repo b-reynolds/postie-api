@@ -5,6 +5,10 @@ services:
     container_name: "database"
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_USER: postie
+      POSTGRES_PASSWORD: postie
+      POSTGRES_DB: postie
     volumes:
       - ./database/data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -21,6 +25,7 @@ services:
       POSTIE_API_KEY: postie
       POSTIE_POSTGRES_HOST: jdbc:postgresql://database
       POSTIE_POSTGRES_PORT: 5432
-      POSTIE_POSTGRES_USER: postgres
+      POSTIE_POSTGRES_USER: postie
+      POSTIE_POSTGRES_PASSWORD: postie
 volumes:
   database_data:

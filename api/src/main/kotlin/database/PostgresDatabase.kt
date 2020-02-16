@@ -12,7 +12,7 @@ class PostgresDatabase(private val credentials: PostgresCredentials) {
      * Connects to and returns the data source.
      */
     fun connect(): Jdbi {
-        val connectionString = "${credentials.host}:${credentials.port}/?user=${credentials.user}"
+        val connectionString = with(credentials) { "$host:$port/postie?user=$user&password=$password" }
         return Jdbi.create(connectionString).apply {
             installPlugin(KotlinSqlObjectPlugin())
             installPlugin(KotlinPlugin())
