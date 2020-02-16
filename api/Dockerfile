@@ -11,7 +11,7 @@ COPY . /usr/src/postie/
 WORKDIR /usr/src/postie
 RUN gradle shadowJar -i --stacktrace
 
-FROM openjdk:8-jre-slim
+FROM openjdk:8-jre-alpine
 EXPOSE 7000
 RUN mkdir /app
 COPY --from=build /usr/src/postie/build/libs/*all.jar /app/postie.jar
