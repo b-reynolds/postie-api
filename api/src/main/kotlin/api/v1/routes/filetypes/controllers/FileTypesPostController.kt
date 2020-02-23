@@ -37,7 +37,7 @@ class FileTypesPostController(
             .readValue<CreateFileTypeDto>(context.body())
             .validate()
 
-        val name = dto.name.trim().toLowerCase()
+        val name = dto.name.trim()
 
         val fileType = fileTypesDao.get(name) ?: fileTypesDao.insert(name)
 
