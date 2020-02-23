@@ -10,8 +10,6 @@ create table file_types
 create unique index file_types_name_uindex
 	on file_types (name);
 
-insert into file_types (id, name, created_at) values (default, 'text', default);
-
 create extension if not exists "uuid-ossp";
 
 create table files
