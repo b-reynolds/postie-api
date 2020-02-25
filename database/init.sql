@@ -16,7 +16,7 @@ create table files
 (
     id uuid not null default uuid_generate_v4() constraint file_pk primary key,
     name text not null, 
-    file_type_id int not null constraint files_file_types_id_fk references file_types,
+    file_type_id int constraint files_file_types_id_fk references file_types,
     contents text not null,
     created_at timestamptz default now() not null,
     expires_at timestamptz

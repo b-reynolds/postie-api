@@ -17,7 +17,7 @@ interface FilesDao {
     @SqlUpdate("insert into files (name, file_type_id, contents, expires_at) values(?, ?, ?, ?)")
     @GetGeneratedKeys
     @RegisterKotlinMapper(File::class)
-    fun insert(name: String, fileTypeId: Int, contents: String, expiresAt: Timestamp?): File
+    fun insert(name: String, fileTypeId: Int?, contents: String, expiresAt: Timestamp?): File
 
     /**
      * Returns the record associated with the specified [id] or `null` if one does not exist.

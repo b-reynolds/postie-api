@@ -45,11 +45,7 @@ class FileTypesPostControllerTests {
     fun `HTTP status code 204 is returned when a matching file type is returned`() {
         val dto = CreateFileTypeDto("json")
 
-        every { dao.get(dto.name) } returns FileType(
-            1,
-            dto.name,
-            Timestamp.from(Instant.now())
-        )
+        every { dao.get(dto.name) } returns FileType(1, dto.name, Timestamp.from(Instant.now()))
         every { context.body() } returns objectMapper.writeValueAsString(dto)
 
         FileTypesPostController(dao, objectMapper)

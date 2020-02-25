@@ -100,17 +100,17 @@ class FilesPostControllerTests {
     }
 
     @Test
-    fun `InvalidFieldException is thrown if a file type ID is not an Int`() {
+    fun `Null file types are allowed`() {
         val fileTypeId = 1
         every { fileTypeDao.contains(fileTypeId) } returns true
 
-        val json = """{ "name": "greeting.txt", "fileTypeId": "1", "contents": "Hello, World!" }"""
+        val json = """{ "name": "greeting.txt", "fileTypeId": null, "contents": "Hello, World!" }"""
         every { context.body() } returns json
 
-        Assertions.assertThrows(InvalidFieldException::class.java) {
-            FilesPostController(fileDao, fileTypeDao, objectMapper)
-                .create(context)
-        }
+        FilesPostController(fileDao, fileTypeDao, objectMapper)
+            .create(context)
+
+        verify { context.status(HttpURLConnection.HTTP_CREATED) }
     }
 
     @Test

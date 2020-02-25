@@ -1,6 +1,6 @@
 package api.v1.routes.files.controllers.dtos
 
-import api.v1.utils.extensions.getInt
+import api.v1.utils.extensions.getIntOrNull
 import api.v1.utils.extensions.getLongOrNull
 import api.v1.utils.extensions.getString
 import com.fasterxml.jackson.core.JsonParser
@@ -16,7 +16,7 @@ import java.sql.Timestamp
 class CreateDtoDeserializer : JsonDeserializer<CreateFileDto>() {
     private fun JsonNode.asCreateDao() = CreateFileDto(
         name = getString(CreateFileDto.Fields.NAME),
-        fileTypeId = getInt(CreateFileDto.Fields.FILE_TYPE_ID),
+        fileTypeId = getIntOrNull(CreateFileDto.Fields.FILE_TYPE_ID),
         contents = getString(CreateFileDto.Fields.CONTENTS),
         expiresAt = getLongOrNull(CreateFileDto.Fields.EXPIRES_AT)
             ?.let { expiresAt -> Timestamp(expiresAt) }
