@@ -89,14 +89,14 @@ class FilesPostControllerTests {
     }
 
     @Test
-    fun `MissingFieldException is thrown if a file type ID is missing`() {
+    fun `File type IDs are not required`() {
         val json = """{ "name": "greeting.txt", "contents": "Hello, World!" }"""
         every { context.body() } returns json
 
-        Assertions.assertThrows(MissingFieldException::class.java) {
-            FilesPostController(fileDao, fileTypeDao, objectMapper)
-                .create(context)
-        }
+        FilesPostController(fileDao, fileTypeDao, objectMapper)
+            .create(context)
+
+        verify { context.status(HttpURLConnection.HTTP_CREATED) }
     }
 
     @Test
