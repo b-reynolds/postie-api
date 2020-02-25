@@ -7,7 +7,7 @@ import java.sql.Timestamp
  */
 data class CreateFileDto(
     val name: String,
-    val fileTypeId: Int,
+    val fileTypeId: Int?,
     val contents: String,
     val expiresAt: Timestamp?
 ) {

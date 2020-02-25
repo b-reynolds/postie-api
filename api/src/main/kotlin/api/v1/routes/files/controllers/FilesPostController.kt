@@ -54,7 +54,7 @@ class FilesPostController(
         }
 
         validateField(CreateFileDto.Fields.FILE_TYPE_ID, "Must exist") { dto ->
-            dto.fileTypeId > 0 && fileTypesDao.contains(dto.fileTypeId)
+            dto.fileTypeId == null || fileTypesDao.contains(dto.fileTypeId)
         }
 
         validateField(CreateFileDto.Fields.CONTENTS, "Cannot be blank") { dto ->

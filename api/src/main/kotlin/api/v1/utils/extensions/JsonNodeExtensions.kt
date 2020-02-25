@@ -48,3 +48,17 @@ fun JsonNode.getInt(fieldName: String): Int {
 
     return value.intValue()
 }
+
+/**
+ * Returns the value associated with the specified [fieldName] if it exits and is a [Int].
+ *
+ * Otherwise, returns `null`.
+ */
+fun JsonNode.getIntOrNull(fieldName: String): Int? {
+    val value = get(fieldName)
+        ?.takeIf { node -> node.isNumber }
+        ?: return null
+
+
+    return value.intValue()
+}

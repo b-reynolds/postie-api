@@ -15,7 +15,7 @@ import java.sql.Timestamp
 data class File(
     val id: String,
     val name: String,
-    val fileTypeId: Int,
+    val fileTypeId: Int?,
     val contents: String,
     val createdAt: Timestamp,
     val expiresAt: Timestamp?
